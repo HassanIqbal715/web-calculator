@@ -8,6 +8,7 @@ let value = 0;
 let screenValue = 0;
 let currentOperator = '';
 let isOn = false;
+let calculated = false;
 
 function createButton(target, text, type) {
     let buttonValue = text;
@@ -42,6 +43,10 @@ function buttonClick(buttonValue, type) {
         return;
     }
     if (type == 1) {
+        if (true == calculated) {
+            screenValue = 0;
+            calculated = false;
+        }
         screenValue *= 10;
         screenValue += buttonValue;
         screenText.textContent = screenValue;
@@ -60,6 +65,7 @@ function buttonClick(buttonValue, type) {
     }
     else if (type == 3) {
         operate();
+        calculated = true;
     }
     else {
         reset();
@@ -68,11 +74,12 @@ function buttonClick(buttonValue, type) {
 
 function operate() {
     if (screenText.textContent == '') {
+        reset();
         screenText.textContent = 'Syntax Error';
-        screenHistory.textContent = '';
-        value = 0;
         return;
     }
+    screenValue = parseFloat(screenValue);
+    value = parseFloat(value);
     switch (currentOperator) {
         case '+':
             value += screenValue;
@@ -81,12 +88,7 @@ function operate() {
             value -= screenValue;
             break;
         case '*':
-            if (value == 0) {
-                value = screenValue;
-            }
-            else {
-                value *= screenValue;
-            }
+            value *= screenValue;
             break;
         case '/':
             if (screenValue == 0) {
@@ -96,15 +98,28 @@ function operate() {
                 screenHistory.innerHTML = '';
                 return;
             }
+            value /= screenValue;
             break;
         default:
             value = screenValue;
             break;
     }
+    if (true == checkOverflow()) {
+        reset();
+        screenText.textContent = 'Overflow';
+        return;
+    }
+    value = Math.round(value * 100) / 100;
     screenValue = value;
-    screenText.textContent = screenValue;
+    screenText.textContent = value.toFixed(2);
     screenHistory.textContent = '';
     currentOperator = '';
+}
+
+function checkOverflow() {
+    if (value >= 999999999)
+        return true;
+    return false;
 }
 
 function createButtons() {
