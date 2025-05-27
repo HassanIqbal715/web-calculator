@@ -104,6 +104,7 @@ function operate() {
     screenValue = value;
     screenText.textContent = screenValue;
     screenHistory.textContent = '';
+    currentOperator = '';
 }
 
 function createButtons() {
