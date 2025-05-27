@@ -3,6 +3,7 @@ const screenText = document.querySelector("#out-screen-text");
 const screenHistory = document.querySelector("#out-screen-history");
 const onButton = document.querySelector("#on-button");
 const offButton = document.querySelector("#off-button");
+const light = document.querySelector("#light");
 
 let value = 0;
 let screenValue = 0;
@@ -154,9 +155,13 @@ onButton.addEventListener("click", () => {
     isOn = true;
     reset();
     screenText.textContent = "Welcome";
+    light.classList.remove("light-off");
+    light.classList.add("light-on");
 });
 
 offButton.addEventListener("click", () => {
     isOn = false;
     reset();
+    light.classList.remove("light-on");
+    light.classList.add("light-off");
 });
